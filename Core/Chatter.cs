@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Threading;
 using EventStore.ClientAPI;
 using EventStore.ClientAPI.SystemData;
 using Newtonsoft.Json;
@@ -64,13 +62,10 @@ namespace Core
             string groupName,
             Action<ChatMessage> onRecieved)
         {
-            var subSettings = PersistentSubscriptionSettingsBuilder.Create()
-                .StartFromBeginning()
-                .Build();
             Connection.CreatePersistentSubscriptionAsync(
                 chatRoom,
                 groupName,
-                subSettings,
+                PersistentSubscriptionSettings.Create().StartFromBeginning().Build(), 
                 _userCredentials);
 
             Connection.ConnectToPersistentSubscription(
@@ -109,6 +104,7 @@ namespace Core
                 ExpectedVersion.Any,
                 eventData);
         }
+
         public static Action<EventStoreSubscription, ResolvedEvent> OnRecieved(Action<ChatMessage> onRecieved)
         {
 
@@ -120,7 +116,8 @@ namespace Core
                 onRecieved(message);
             };
         }
-        public static Action<EventStorePersistentSubscription, ResolvedEvent> OnRecievedPersistent(Action<ChatMessage> onRecieved)
+
+        private static Action<EventStorePersistentSubscriptionBase, ResolvedEvent> OnRecievedPersistent(Action<ChatMessage> onRecieved)
         {
             return (sender, e) =>
             {

@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using Core;
-using EventStore.ClientAPI;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 namespace EventStore.Chat.Console
 {
@@ -22,7 +12,7 @@ namespace EventStore.Chat.Console
             var chatRoom = args[1];
             var ipAddress = args.Length > 2
                 ? args[3]
-                : "54.77.248.243";
+                : "40.69.40.202";
             Chatter.Init(ipAddress);
             Chatter.Subscribe(
                 chatRoom,
