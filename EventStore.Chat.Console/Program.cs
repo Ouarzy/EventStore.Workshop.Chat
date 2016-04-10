@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Net;
+using System.Threading;
 using Core;
 
 namespace EventStore.Chat.Console
@@ -10,10 +12,11 @@ namespace EventStore.Chat.Console
         {
             var user = args[0];
             var chatRoom = args[1];
-            var ipAddress = args.Length > 2
+            var serverName = args.Length > 2
                 ? args[3]
-                : "40.69.40.202";
-            Chatter.Init(ipAddress);
+                : "ubuntustore.cloudapp.net";
+            IPAddress[] ipAddresses = Dns.GetHostAddresses(serverName);
+            Chatter.Init(ipAddresses.First().ToString());
             Chatter.Subscribe(
                 chatRoom,
                 OnRecieved);
